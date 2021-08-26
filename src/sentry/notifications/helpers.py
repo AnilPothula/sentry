@@ -55,6 +55,19 @@ NOTIFICATION_SETTING_DEFAULTS = {
 }
 
 
+def _get_notification_setting_default(
+    provider: ExternalProviders,
+    type: NotificationSettingTypes,
+    organization: Optional["Organization"] = None,
+    user: Optional["User"] = None,
+) -> NotificationSettingOptionValues:
+    """
+    In order to increase engagement, we automatically opt users into receiving
+    Slack notifications if they install Slack and link their identity.
+    """
+    return NOTIFICATION_SETTING_DEFAULTS[provider][type]
+
+
 def _get_setting_mapping_from_mapping(
     notification_settings_by_user: Mapping[
         "User",
