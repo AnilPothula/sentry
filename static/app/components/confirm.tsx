@@ -27,6 +27,7 @@ export type ConfirmMessageRenderProps = {
    * This should be called in the components componentDidMount.
    */
   setConfirmCallback: (cb: () => void) => void;
+  selectedValue?: string;
 };
 
 export type ConfirmButtonsRenderProps = {
@@ -42,7 +43,7 @@ export type ConfirmButtonsRenderProps = {
 };
 
 type ChildrenRenderProps = {
-  open: () => void;
+  open: (e?: React.MouseEvent, selectedValue?: string) => void;
 };
 
 type Props = {
@@ -120,6 +121,7 @@ type Props = {
    * Text to show in the confirmation button
    */
   confirmText?: React.ReactNode;
+  selectedValue?: string;
 };
 
 function Confirm({
@@ -140,7 +142,7 @@ function Confirm({
   stopPropagation = false,
   disableConfirmButton = false,
 }: Props) {
-  const triggerModal = (e?: React.MouseEvent) => {
+  const triggerModal = (e?: React.MouseEvent, selectedValue?: string) => {
     if (stopPropagation) {
       e?.stopPropagation();
     }
@@ -168,9 +170,12 @@ function Confirm({
       onConfirm,
       onCancel,
       disableConfirmButton,
+      selectedValue,
     };
 
-    openModal(renderProps => <ConfirmModal {...renderProps} {...modalProps} />);
+    openModal(renderProps => {
+      return <ConfirmModal {...renderProps} {...modalProps} />;
+    });
   };
 
   if (typeof children === 'function') {
@@ -199,6 +204,7 @@ type ModalProps = ModalRenderProps &
     | 'onConfirm'
     | 'onCancel'
     | 'disableConfirmButton'
+    | 'selectedValue'
   >;
 
 type ModalState = {
@@ -247,7 +253,7 @@ class ConfirmModal extends React.Component<ModalProps, ModalState> {
   };
 
   get confirmMessage() {
-    const {message, renderMessage} = this.props;
+    const {message, renderMessage, selectedValue} = this.props;
 
     if (typeof renderMessage === 'function') {
       return renderMessage({
@@ -257,6 +263,7 @@ class ConfirmModal extends React.Component<ModalProps, ModalState> {
           this.setState({disableConfirmButton: state}),
         setConfirmCallback: (confirmCallback: () => void) =>
           this.setState({confirmCallback}),
+        selectedValue,
       });
     }
 

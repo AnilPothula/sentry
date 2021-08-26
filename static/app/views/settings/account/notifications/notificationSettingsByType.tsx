@@ -154,10 +154,9 @@ class NotificationSettingsByType extends AsyncComponent<Props, State> {
     );
     if (isSufficientlyComplex(notificationType, notificationSettings)) {
       defaultField.confirm = {
-        message: t(
+        never: t(
           'Setting the default to "never" will irreversibly overwrite all of your fine-tuning settings. Continue?'
         ),
-        values: ['never'],
       };
     }
 
